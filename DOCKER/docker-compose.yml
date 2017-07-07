@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  stretch-shib-idp-test01:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+         - "8080:8080"
+         - "8443:8443"
+    volumes:
+      - /var/tmp/docker-logs-jetty:/opt/jetty/logs
+      - /var/tmp/docker-logs-shibboleth:/opt/shibboleth-idp/logs
