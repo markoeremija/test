@@ -34,5 +34,3 @@ the CMD, to enable cache usage as much as possible.
 
 When using more than one container, Docker Compose can be used only for *testing* purposes. To install a different
 version of Docker Compose, use this command:
-
-> curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose

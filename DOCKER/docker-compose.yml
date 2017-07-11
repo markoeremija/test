@@ -11,3 +11,12 @@ services:
     volumes:
       - /var/tmp/docker-logs-jetty:/opt/jetty/logs
       - /var/tmp/docker-logs-shibboleth:/opt/shibboleth-idp/logs
+
+  mysql-idp:
+    image: mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: example
+    volumes:
+        - db_data:/var/lib/mysql
+volumes:
+  db_data:
