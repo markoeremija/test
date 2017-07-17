@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This command installs the newest Docker repository.
+# This script installs the newest Docker repository.
 # It is the best practice to use this repository, instead of the
 # one provided by a Linux distribution.
 # Additionaly, the version used is v17.06, which has some changes
@@ -13,11 +13,12 @@
 # it won't run on Docker Engine versions lower than 1.10.
 # Last version available on CentOS 6.x is 1.7.1.
 
-centos_version=`cat /etc/centos-release | awk '{print $2}'`
+centos_version=`cat /etc/centos-release | awk '{print $3}'`
 
-if [[ "$centos_version" != *"7"*  ]]; then
+if [[ "$centos_version" != *"7."*  ]]; then
   printf "You can use Docker on this version of OS, installing it from offical repository.\n"
   printf "In order to take full advantage of all new features, please upgrade to CentOS 7.\n"
 else
   curl -sSL https://get.docker.com/ | sh
+  /usr/bin/systemctl start docker && /usr/bin/systemctl enable docker
 fi
