@@ -1,0 +1,23 @@
+dn: ou=groups,dc=example,dc=com
+ou: Groups
+description: All people in organisation
+objectclass: organizationalUnit
+objectclass: top
+
+dn: ou=policies,dc=example,dc=com
+ou: Policies
+description: All people in organisation
+objectclass: organizationalUnit
+objectclass: top
+
+dn: ou=people,dc=example, dc=com
+ou: People
+description: All people in organisation
+objectclass: organizationalUnit
+objectclass: top
+
+dn: ou=system,dc=example,dc=com
+ou: System
+description: All people in organisation
+objectclass: organizationalUnit
+objectclass: top
