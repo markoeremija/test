@@ -29,7 +29,7 @@ RUN apt-get update && \
       echo "slapd slapd/no_configuration boolean false" | debian-set-selections && \
       echo "slapd slapd/password1 password" | debian-set-selections && \
       echo "slapd slapd/password2 password" | debian-set-selections && \
-      echo "slapd slapd/purge_database boolean false" | debian-set-selections && \
+      echo "slapd slapd/purge_database boolean false" | debian-set-selections; \
     fi;
 
 RUN apt-get -y --no-install-recommends install \
