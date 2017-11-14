@@ -51,12 +51,12 @@ COPY ldif-files .
 
 RUN wget -q -i openldap-schema-list.lst && \
     mv eduperson* eduperson-201602.ldif && \
-    mv schac* schac-20150413.ldif && \ 
+    mv schac* schac-20150413.ldif && \
     cp /etc/ldap/schema/ppolicy.ldif ppolicy.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f eduperson-201602.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f schac-20150413.ldif && \
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f directory-settings.ldif \ &&
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f directory-settings.ldif && \ 
     ldapadd -Y EXTERNAL -H ldapi:/// -f branches.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f users.ldif
 
