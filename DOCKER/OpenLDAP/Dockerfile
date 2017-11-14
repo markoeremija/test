@@ -34,7 +34,7 @@ RUN apt-get update && \
 
 RUN apt-get -y --no-install-recommends install \
     ldap-utils \
-    slapd \ &&
+    slapd && \ 
     mkdir /var/log/slapd
 
 # System related configuration
