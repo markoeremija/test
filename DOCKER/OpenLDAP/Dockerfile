@@ -65,7 +65,8 @@ RUN service rsyslog restart && \
     service slapd restart
 
 # Clean packages
-RUN apt-get -y --purge autoremove && rm -rf /var/lib/apt/lists/*
+RUN apt-get -y --purge autoremove && \
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 389 636
 
