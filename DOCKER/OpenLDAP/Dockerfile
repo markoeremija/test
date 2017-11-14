@@ -49,9 +49,9 @@ WORKDIR /root/ldap-configs
 
 COPY ldif-files .
 
-RUN wget -q -i openldap-schema-list.lst \ &&
-    mv eduperson* eduperson-201602.ldif \ &&
-    mv schac* schac-20150413.ldif \ &&
+RUN wget -q -i openldap-schema-list.lst && \
+    mv eduperson* eduperson-201602.ldif && \
+    mv schac* schac-20150413.ldif && \ 
     cp /etc/ldap/schema/ppolicy.ldif ppolicy.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f eduperson-201602.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy.ldif && \
