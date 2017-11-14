@@ -9,18 +9,37 @@ LABEL description="This is an OpenLDAP Dockerfile \
 for the GN4 Campus IdP task (JRA3T1)."
 
 # ENV variables
-ENV ldap['base_dn'] \
-    ldap['domain'] \
-    ldap['org'] \
-    ldap['root_pw'] \
-    ldap['root_dn']
+#ENV ldap['base_dn'] \
+#    ldap['domain'] \
+#    ldap['org'] \
+#    ldap['root_pw'] \
+#    ldap['root_dn']
+ENV DEBIAN_FRONTEND noninteractive
 
-# update APT cache and install required packages
+# Using ENV variables can help with setting defaults for
+# unattended installation of OpenLDAP. Add it later.
+
+# Set options in advance for unattended Debian installation.
+
 RUN apt-get update && \
     apt-get -y --no-install-recommends install \
     debconf-utils \
+    python-ldap; \
+    output=$( debconf-get-selections | grep -q -s slapd ); \
+    if [ $output ]; then
+      echo "slapd shared/organization string EXAMPLE Institution" | debian-set-selections && \
+      echo "slapd slapd/allow_ldap_v2 boolean false" | debian-set-selections && \
+      echo "slapd slapd/backend select MDB" | debian-set-selections && \
+      echo "slapd slapd/domain string example.org" | debian-set-selections && \
+      echo "slapd slapd/move_old_database boolean true" | debian-set-selections && \
+      echo "slapd slapd/no_configuration boolean false" | debian-set-selections && \
+      echo "slapd slapd/password1 password" | debian-set-selections && \
+      echo "slapd slapd/password2 password" | debian-set-selections && \
+      echo "slapd slapd/purge_database boolean false" | debian-set-selections
+    fi
+
+RUN apt-get -y --no-install-recommends install \
     ldap-utils \
-    python-ldap \
     slapd
 
 # System related configuration
