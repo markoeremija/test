@@ -9,15 +9,9 @@ LABEL description="This is an OpenLDAP Dockerfile \
 for the GN4 Campus IdP task (JRA3T1)."
 
 # ENV variables
-#ENV ldap['base_dn'] \
-#    ldap['domain'] \
-#    ldap['org'] \
-#    ldap['root_pw'] \
-#    ldap['root_dn']
-ENV DEBIAN_FRONTEND noninteractive
-
 # Using ENV variables can help with setting defaults for
 # unattended installation of OpenLDAP. Add it later.
+ENV DEBIAN_FRONTEND noninteractive
 
 # Set options in advance for unattended Debian installation.
 
@@ -25,8 +19,8 @@ RUN apt-get update && \
     apt-get -y --no-install-recommends install \
     debconf-utils \
     python-ldap; \
-    output=$( debconf-get-selections | grep -q -s slapd ); \
-    if [ $output ]; then
+    debconf=$( debconf-get-selections | grep -q -s slapd ); \
+    if [ $debconf ]; then
       echo "slapd shared/organization string EXAMPLE Institution" | debian-set-selections && \
       echo "slapd slapd/allow_ldap_v2 boolean false" | debian-set-selections && \
       echo "slapd slapd/backend select MDB" | debian-set-selections && \
