@@ -4,7 +4,7 @@ FROM debian:stretch
 LABEL "org.geant"="GÉANT Association"
 LABEL maintainer.email="marko.eremija [at] amres.ac.rs"
 LABEL maintainer.name="Marko Eremija"
-LABEL version="1.0"
+LABEL version="0.0.1"
 LABEL description="This is an OpenLDAP Dockerfile \
 for the GN4 Campus IdP task (JRA3T1)."
 
@@ -34,7 +34,7 @@ RUN apt-get update && \
 
 RUN apt-get -y --no-install-recommends install \
     ldap-utils \
-    slapd && \ 
+    slapd && \
     mkdir /var/log/slapd
 
 # System related configuration
