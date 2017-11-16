@@ -30,7 +30,7 @@ st: Rome
 street: Example Street 1
 telephoneNumber: +398324732194
 uid: testuser
--
+
 dn: cn=default,ou=policies,dc=example,dc=org
 objectClass: pwdPolicy
 objectClass: person
@@ -49,7 +49,7 @@ pwdMaxFailure: 5
 pwdFailureCountInterval: 30
 pwdExpireWarning: 600
 pwdSafeModify: TRUE
--
+
 dn: cn=idpuser,ou=system,dc=example,dc=org
 objectClass: inetOrgPerson
 cn: idpuser

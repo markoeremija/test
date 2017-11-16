@@ -17,53 +17,56 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
     apt-get -y --no-install-recommends install \
-    debconf-utils \
-    python-ldap; \
-    debconf=$( debconf-get-selections | grep -q -s slapd ); \
-    if [ $debconf ]; then \
-      echo "slapd shared/organization string EXAMPLE Institution" | debian-set-selections && \
-      echo "slapd slapd/allow_ldap_v2 boolean false" | debian-set-selections && \
-      echo "slapd slapd/backend select MDB" | debian-set-selections && \
-      echo "slapd slapd/domain string example.org" | debian-set-selections && \
-      echo "slapd slapd/move_old_database boolean true" | debian-set-selections && \
-      echo "slapd slapd/no_configuration boolean false" | debian-set-selections && \
-      echo "slapd slapd/password1 password" | debian-set-selections && \
-      echo "slapd slapd/password2 password" | debian-set-selections && \
-      echo "slapd slapd/purge_database boolean false" | debian-set-selections; \
+	  apt-utils \
+	  debconf-utils \
+    python-ldap && \
+    deb_conf=$( debconf-get-selections | grep -q -s slapd; echo $? ) && \
+    if [ $deb_conf ]; then \
+    echo "slapd   slapd/password1 password" | debconf-set-selections && \
+	  echo "slapd   slapd/password2 password" | debconf-set-selections && \
+    echo "slapd   slapd/move_old_database boolean true" | debconf-set-selections && \
+	  echo "slapd   slapd/domain string example.org" | debconf-set-selections && \
+	  echo "slapd   shared/organization string EXAMPLE Institution" | debconf-set-selections && \
+    echo "slapd   slapd/no_configuration boolean false" | debconf-set-selections && \
+	  echo "slapd   slapd/purge_database boolean false" | debconf-set-selections && \
+	  echo "slapd   slapd/allow_ldap_v2 boolean false" | debconf-set-selections && \
+    echo "slapd   slapd/backend select MDB" | debconf-set-selections; \
     fi;
 
-RUN apt-get -y --no-install-recommends install \
+RUN apt-get update && \
+    apt-get -y --no-install-recommends install \
     ldap-utils \
     slapd \
+	  rsyslog \
     wget && \
-    mkdir /var/log/slapd
+    mkdir /var/log/slapd && \
+	  mkdir /root/ldap-configs
 
 # System related configuration
 
 COPY 99-slapd.conf /etc/rsyslog.d/
 
+# OpenLDAP related configuration
+
 COPY ldap.conf /etc/ldap/
 
-# OpenLDAP related configuration
+COPY ldif-files /root/ldap-configs/
 
 WORKDIR /root/ldap-configs
 
-COPY ldif-files .
-
-RUN wget -q -i openldap-schema-list.lst && \
-    mv eduperson* eduperson-201602.ldif && \
-    mv schac* schac-20150413.ldif && \
-    cp /etc/ldap/schema/ppolicy.ldif ppolicy.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f eduperson-201602.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f schac-20150413.ldif && \
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f directory-settings.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f branches.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f users.ldif
+RUN cp /etc/ldap/schema/ppolicy.ldif ppolicy.ldif && \
+	service slapd start && \
+  ldapadd -Y EXTERNAL -H ldapi:/// -f eduperson-201602.ldif && \
+  ldapadd -Y EXTERNAL -H ldapi:/// -f schac-20150413.ldif && \
+	ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy.ldif && \
+	ldapmodify -Y EXTERNAL -H ldapi:/// -f directory-settings.ldif && \
+	ldapadd -Y EXTERNAL -H ldapi:/// -f branches.ldif && \
+	ldapadd -Y EXTERNAL -H ldapi:/// -f users.ldif
 
 # Run restart rsyslog && slapd when everything is checked and copied
 RUN service rsyslog restart && \
-    service slapd restart
+    service slapd stop && \
+	service slapd start
 
 # Clean packages
 RUN apt-get -y --purge autoremove && \

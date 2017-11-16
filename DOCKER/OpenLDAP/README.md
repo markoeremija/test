@@ -6,13 +6,37 @@ also produced by JRA3T1 (contact: marco.malavolti [at] gmail.com).
 This Dockerfile is based on using the well-known schemas for R&E community (eduPerson and schac).
 It also contains password policy and memberOf overlay configuration.
 
-# Volumes
+# Problems
 
-The MDB file with user data is mapped on a **local** volume, because primary idea of Docker is to be
+It was noted that wget does not behave well when used inside of a container. It has some problems with
+HTTPS links and displays the error below:
+
+> ERROR: The certificate of 'https://hostname' is not trusted.
+> ERROR: The certificate of 'https://hostname' hasn't got a known issuer.
+> The certificate's owner does not match hostname 'hostname'
+
+The solution at the moment is to have all the LDIF files in one directory prior to creating a container. Possible solution is to
+install CA certificates package using apt.
+
+# Todo
+
+Current Dockerfile is missing environmental variables. They should be added in order to enable dynamic configuration.
+It would be most beneficial to have variables for all the LDAP configuration parameters, e.g. domain, root DN password etc.
+Another design consideration to take into account is to decide whether or not to keep configuration files on a local files system.
+Possible changes should include keeping the list of schemas to be used on a local file system. This way, if there are more specific
+schemas that a particular institution is using, they will be able just to add a URL from which the schema can be downloaded (it will still require minor changes to the Dockerfile).
+
+- [ ] Make these changes
+- [ ] Test changes
+- [ ] Push code to GitHub
+
+## Volumes
+
+The MDB file with user data should be mapped on a **local** volume, because primary idea of Docker is to be
 used for **stateless** data. This way, when a container is stopped (or removed) the MDB file is
 saved and can be migrated or used with another container.
 
-The same applies for log files. They are mapped *locally*.
+The same applies for log files. They should be mapped *locally*.
 
 So, to better understand where mutable files are actually kept, take a look at the table below.
 
@@ -24,11 +48,3 @@ So, to better understand where mutable files are actually kept, take a look at t
 This means that log files are created in the container but are changed only on the local file system.
 MDB file can also be found on a local hard drive, but is presented to the container. Both of the files
 can be accessed from the inside of the container, but physically exist only on the local file system.
-
-## Todo
-
-Current Dockerfile is missing environmental variables. They should be added in order to enable dynamic configuration.
-It would be most beneficial to have variables for all the LDAP configuration parameters, e.g. domain, root DN password etc.
-Another design consideration to take into account is to decide whether or not to keep configuration files on a local files system.
-Possible changes should include keeping the list of schemas to be used on a local file system. This way, if there are more specific
-schemas that a particular institution is using, they will be able just to add a URL from which the schema can be downloaded (it will still require minor changes to the Dockerfile).

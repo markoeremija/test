@@ -1,14 +1,5 @@
 dn: cn=config
 changeType: modify
-replace: olcTLSCACertificateFile
-olcTLSCACertificateFile: /etc/ssl/certs/cacert.pem
--
-replace: olcTLSCertificateFile
-olcTLSCertificateFile: /etc/ssl/certs/ssl-cert.crt
--
-replace: olcTLSCertificateKeyFile
-olcTLSCertificateKeyFile: /etc/ssl/private/ssl-cert.key
--
 replace: olcLogLevel
 olcLogLevel: "256"
 
@@ -20,25 +11,12 @@ olcModuleLoad: {2}ppolicy
 
 dn: olcDatabase={1}mdb,cn=config
 changeType: modify
-add: olcAccess
-olcAccess: {0}to attrs=userPassword
-    by self write
-    by anonymous auth
-    by dn="cn=admin,dc=example,dc=org" write
-    by * none
-olcAccess: {1}to dn.base=""
-    by * read
-olcAccess: {2}to *
-    by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage
-    by * break
-olcAccess: {3}to dn.base="cn=Subschema"
-    by * read
-olcAccess: {4}to *
-    by dn.exact="cn=idpuser,ou=system,dc=example,dc=org" read
-    by anonymous auth
-    by self read
+replace: olcRootDN
+olcRootDN: cn=admin,dc=example,dc=org
 -
-changeType: modify
+replace: olcRootPW
+olcRootPW: password
+-
 replace: olcDbIndex
 olcDbIndex: objectClass eq
 olcDbIndex: member eq
@@ -48,16 +26,31 @@ olcDbIndex: uid pres,eq
 olcDbIndex: entryUUID eq
 olcDbIndex: sn pres,eq,sub
 olcDbIndex: mail pres,eq,sub
+-
+replace: olcAccess
+olcAccess: {0}to attrs=userPassword
+  by self write
+  by anonymous auth
+  by dn="cn=admin,dc=example,dc=org"
+  write by * none
+olcAccess: {1}to dn.base=""
+  by * read
+olcAccess: {2}to *
+  by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage
+  by * break
+olcAccess: {3}to dn.base="cn=Subschema"
+  by * read
+olcAccess: {4}to *
+  by dn.exact="cn=idpuser,ou=system,dc=example,dc=org" read
+  by anonymous auth
+  by self read
 
 dn: olcOverlay={0}memberof,olcDatabase={1}mdb,cn=config
-changeType: modify
-add: objectClass
+changeType: add
 objectClass: olcConfig
 objectClass: olcMemberOf
 objectClass: olcOverlayConfig
 objectClass: top
--
-changeType: add
 olcOverlay: memberof
 olcMemberOfDangling: ignore
 olcMemberOfRefInt: TRUE
@@ -66,12 +59,10 @@ olcMemberOfMemberAD: member
 olcMemberOfMemberOfAD: memberOf
 
 dn: olcOverlay={1}ppolicy,olcDatabase={1}mdb,cn=config
-changeType: modify
-add: objectClass
-objectClass: olcConfig
-objectClass: olcPolicyConfig
-objectClass: top
--
 changeType: add
+objectClass: olcConfig
+objectClass: olcOverlayConfig
+objectClass: olcPPolicyConfig
+objectClass: top
 olcOverlay: ppolicy
 olcPPolicyDefault: cn=default,ou=policies,dc=example,dc=org
