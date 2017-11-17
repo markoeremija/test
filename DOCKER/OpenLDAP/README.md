@@ -12,8 +12,8 @@ It was noted that wget does not behave well when used inside of a container. It 
 HTTPS links and displays the error below:
 
 > ERROR: The certificate of 'https://hostname' is not trusted.
-> ERROR: The certificate of 'https://hostname' hasn't got a known issuer.
-> The certificate's owner does not match hostname 'hostname'
+ERROR: The certificate of 'https://hostname' hasn't got a known issuer.
+The certificate's owner does not match hostname 'hostname'
 
 The solution at the moment is to have all the LDIF files in one directory prior to creating a container. Possible solution is to
 install CA certificates package using apt.
