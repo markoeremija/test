@@ -12,8 +12,8 @@ It was noted that wget does not behave well when used inside of a container. It 
 HTTPS links and displays the error below:
 
 > ERROR: The certificate of 'https://hostname' is not trusted.
-  ERROR: The certificate of 'https://hostname' hasn't got a known issuer.
-  The certificate's owner does not match hostname 'hostname'
+> ERROR: The certificate of 'https://hostname' hasn't got a known issuer.
+> The certificate's owner does not match hostname 'hostname'
 
 The solution at the moment is to have all the LDIF files in one directory prior to creating a container. Possible solution is to
 install CA certificates package using apt.
@@ -25,6 +25,7 @@ It would be most beneficial to have variables for all the LDAP configuration par
 Another design consideration to take into account is to decide whether or not to keep configuration files on a local files system.
 Possible changes should include keeping the list of schemas to be used on a local file system. This way, if there are more specific
 schemas that a particular institution is using, they will be able just to add a URL from which the schema can be downloaded (it will still require minor changes to the Dockerfile).
+Try with installing ca-certs package and then use list of files for LDIFs.
 
 - [ ] Make these changes
 - [ ] Test changes
