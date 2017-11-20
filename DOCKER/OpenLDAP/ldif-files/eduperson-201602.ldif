@@ -1,12 +1,3 @@
-# This is an unofficial version of the eduPerson 201602 schema
-# See also: https://www.switch.ch/aai/docs/LDAP-schemas
-#
-# The official repository you find here:
-#   https://spaces.internet2.edu/display/macedir/LDIFs
-#
-# For more information about eduPerson, see:
-#   http://middleware.internet2.edu/eduperson/
-#
 dn: cn=eduperson,cn=schema,cn=config
 objectClass: olcSchemaConfig
 cn: eduperson
@@ -21,7 +12,7 @@ olcAttributeTypes: ( 1.3.6.1.4.1.5923.1.1.1.7
  EQUALITY caseExactMatch
  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
 olcAttributeTypes: ( 1.3.6.1.4.1.5923.1.1.1.2
- NAME 'eduPersonNickname'
+ NAME 'eduPersonNickName'
  DESC 'eduPerson per Internet2 and EDUCAUSE'
  EQUALITY caseIgnoreMatch
  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
@@ -54,7 +45,7 @@ olcAttributeTypes: ( 1.3.6.1.4.1.5923.1.1.1.12
  NAME 'eduPersonPrincipalNamePrior'
  DESC 'eduPersonPrincipalNamePrior per Internet2'
  EQUALITY caseIgnoreMatch
- SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+ SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
 olcAttributeTypes: ( 1.3.6.1.4.1.5923.1.1.1.9
  NAME 'eduPersonScopedAffiliation'
  DESC 'eduPerson per Internet2 and EDUCAUSE'
