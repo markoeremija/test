@@ -1,0 +1,49 @@
+$servers->newServer('ldap_pla');
+$servers->setValue('server','name','{{ pla['ldap']['org'] }} LDAP Server');
+$servers->setValue('server','host','{{ fqdn }}');
+$servers->setValue('server','base',array('ou=people,{{ pla['ldap']['basedn'] }}'));
+$servers->setValue('login','bind_id','{{ pla['ldap']['root_dn'] }}');
+$servers->setValue('login','bind_pass','{{ pla['ldap']['root_pw'] }}');
+
+
+Vrednosti se vuku iz host_vars fajla. Zasniva se na korišćenju key-value parova,
+pa je tako pla['ldap']['basedn'] u stvari, gledajući donji ispis:
+
+pla --
+     |
+     ldap -> basedn: "{{ ldap['basedn'] }}"
+
+Ova notacija se dalje koristi za dobijanje vrednosti koja se nalazi pod ldap['basedn']
+promenljivom koja je definisana za LDAP:
+
+ldap --
+      |
+      basedn: "dc=example,dc=org"
+
+Zaključak: potrebno je samo cat-ovati parametre za pristup iz fajla koji se koristi
+za konfiguraciju LDAP-a, a koji je mapiran preko volume-a: directory-settings.ldif.
+
+
+### phpLDAPadmin Variables
+pla:
+ orgUrl: "https://www.orgUrl.it"
+ easy_idm: "False"
+ ldap:
+  basedn: "{{ ldap['basedn'] }}"
+  domain: "{{ ldap['domain'] }}"
+  org: "{{ ldap['org'] }}"
+  url: "{{ ldap['url'] }}"
+  root_dn: "{{ ldap['root_dn'] }}"
+  root_pw: "{{ ldap['root_pw'] }}"
+
+### LDAP Variables
+idp_ldap_restore: "false"
+
+ldap:
+ basedn: "dc=example,dc=org"
+ domain: "example.org"
+ org: "EXAMPLE Institution"
+ url: "ldap://{{ fqdn }}:389"
+ root_dn: "cn=admin,dc=example,dc=org"
+ root_pw: "ldaprootpw"
+ create_test_user: "yes"
