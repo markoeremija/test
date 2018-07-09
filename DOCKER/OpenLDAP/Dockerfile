@@ -9,10 +9,8 @@ LABEL description="This is an OpenLDAP Dockerfile \
 for the GN4 Campus IdP task (JRA3T1)."
 
 # ENV variables
-# Using ENV variables can help with setting defaults for
-# unattended installation of OpenLDAP. Add it later.
+
 ENV DEBIAN_FRONTEND noninteractive
-#ARG DEBIAN_FRONTEND=noninteractive
 
 # Set options in advance for unattended Debian installation.
 
