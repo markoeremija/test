@@ -6,6 +6,8 @@ cwd=`pwd`
 
 # Password for LDAP admin
 _pla_root_pw="testing123"
+
+# Variables used for conneting to OpenLDAP Container
 _org="AMRES"
 _hostname="docker-test.amres.ac.rs"
 _basedn="dc=amres,dc=ac,dc=rs"
