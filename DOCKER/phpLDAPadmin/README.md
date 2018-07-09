@@ -3,7 +3,7 @@
 This is the phpLDAPadmin Dockerfile produced by JRA3T1 task within GÉANT4 project. It resembles the Ansible
 recipe for phpLDAPadmin (https://github.com/GEANT/ansible-shibboleth/tree/master/roles/phpldapadmin),
 also produced by JRA3T1 (contact: marco.malavolti [at] gmail.com).
-This Dockerfile is based on using the well-known .
+This Dockerfile is based on using the well-known phpLDAPadmin software (http://phpldapadmin.sourceforge.net/wiki/index.php/Main_Page).
 
 # Prerequisites
 
@@ -44,7 +44,7 @@ TLS_CACERT      /etc/ssl/certs/ca-certificates.crt
 
 # Todo
 
-As the idea is to enable as much configuration to be dynamically created as possible, the future work is going to focus on creating a custom Root CA file. This should be done because it provides more security and, at the same time, protects communication between OpenLDAP and phpLDAPadmin containers. In order to make building of the custom Docker images even faster and more transparent, a Docker Compose file will be created. 
+As the idea is to enable as much configuration to be dynamically created as possible, the future work is going to focus on creating a custom Root CA file. This should be done because it provides more security and, at the same time, protects communication between OpenLDAP and phpLDAPadmin containers. In order to make building of the custom Docker images even faster and more transparent for the end user, a Docker Compose file will be created.
 
 ## Volumes
 
