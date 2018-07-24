@@ -1,10 +1,10 @@
 FROM debian:stretch
 
 # Docker image related information
-LABEL "org.geant"="GÃANT Association"
+LABEL "org.geant"="GÉNT Association"
 LABEL maintainer.email="marko.eremija [at] amres.ac.rs"
 LABEL maintainer.name="Marko Eremija"
-LABEL version="0.0.1"
+LABEL version="0.1.0"
 LABEL description="This is an OpenLDAP Dockerfile \
 for the GN4 Campus IdP task (JRA3T1)."
 
@@ -36,57 +36,42 @@ RUN apt-get update && \
     apt-get -y --no-install-recommends install \
     ldap-utils \
     slapd \
-    rsyslog && \
-    mkdir /var/log/slapd && \
-    mkdir /root/ldap-configs
+    rsyslog
 
-# System related configuration
-
-COPY 99-slapd.conf /etc/rsyslog.d/
-
-COPY ldap.conf /etc/ldap/
-
-COPY cert.key /etc/ssl/private/docker-test.amres.ac.rs.key
-
-COPY cert.pem /etc/ssl/certs/docker-test_amres_ac_rs.pem
-
-COPY cacert.pem /etc/ssl/certs/cacert.pem
-
-# Change owner of files for OpenLDAP to be able to read them
-
-RUN chown openldap:openldap /etc/ssl/private/docker-test.amres.ac.rs.key && \
-
-# OpenLDAP related configuration
-
-COPY ldif-files /root/ldap-configs/
+# Change the working directory
 
 WORKDIR /root/ldap-configs
 
-RUN cp /etc/ldap/schema/ppolicy.ldif ppolicy.ldif && \
-    service slapd start && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f eduperson-201602.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f schac-20150413.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy.ldif && \
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f directory-settings.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f branches.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f users.ldif
+# System related configuration
 
-# Run restart rsyslog && slapd when everything is checked and copied
-RUN service rsyslog restart && \
-    service slapd stop && \
-    service slapd start
+COPY ldif-files /root/ldap-configs/
+
+# Copy certificates
+
+COPY docker-test.amres.ac.rs.key /etc/ssl/private/docker-test.amres.ac.rs.key
+
+COPY docker-test.amres.ac.rs.pem /etc/ssl/certs/docker-test.amres.ac.rs.pem
+
+# Map the volumes
+
+VOLUME ["/root/ldap-configs/","/var/log/slapd/","/etc/ssl/"]
 
 # Clean packages
+
 RUN apt-get -y --purge autoremove && \
-    rm -rf /var/lib/apt/lists/*
+rm -rf /var/lib/apt/lists/*
+
+# Entrypoint script
+
+COPY entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 389 636
 
-# exec /usr/sbin/slapd -h "ldap://$HOSTNAME ldaps://$HOSTNAME ldapi:///" -u openldap -g openldap -d $LDAP_LOG_LEVEL
-
 CMD ["slapd", \
-     "-d", "256", \
+     "-d", "-1", \
      "-h ldap:// ldaps:// ldapi:///", \
-         "-u", "openldap", \
-         "-g", "openldap", \
-         "-F", "/etc/ldap/slapd.d"]
+     "-u", "openldap", \
+     "-g", "openldap", \
+     "-F", "/etc/ldap/slapd.d"]
