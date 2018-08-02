@@ -1,0 +1,5 @@
+# Use this file when copying files from the same directory where
+# Dockerfile is located.
+
+*.md
+*.key
